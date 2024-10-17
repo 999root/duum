@@ -5,24 +5,27 @@ from random import choices, randrange
 
 class ObjectHandler:
     def __init__(self, game):
-        self.game = game
-        self.sprite_list = []
-        self.npc_list = []
-        self.npc_sprite_path = 'resources/sprites/npc/'
-        self.static_sprite_path = 'resources/sprites/static_sprites/'
-        self.anim_sprite_path = 'resources/sprites/animated_sprites/'
+        self.game = game  # Reference to the main game instance
+        self.sprite_list = []  # List of static and animated sprites
+        self.npc_list = []  # List of NPCs
+        self.npc_sprite_path = 'resources/sprites/npc/'  # Path to NPC sprites
+        self.static_sprite_path = 'resources/sprites/static_sprites/'  # Path to static sprites
+        self.anim_sprite_path = 'resources/sprites/animated_sprites/'  # Path to animated sprites
+        
+        # Methods for adding sprites and NPCs
         add_sprite = self.add_sprite
         add_npc = self.add_npc
-        self.npc_positions = {}
+        self.npc_positions = {}  # Dictionary to track NPC positions
 
-        # spawn npc
-        self.enemies = 20  # npc count
-        self.npc_types = [SoldierNPC, CacoDemonNPC, CyberDemonNPC]
-        self.weights = [70, 20, 10]
-        self.restricted_area = {(i, j) for i in range(10) for j in range(10)}
-        self.spawn_npc()
+        # Configure NPC spawn
+        self.enemies = 20  # Total number of enemies (NPCs)
+        self.npc_types = [SoldierNPC, CacoDemonNPC, CyberDemonNPC]  # List of NPC types
+        self.weights = [70, 20, 10]  # Probabilities for spawning each type (70% Soldier, 20% CacoDemon, 10% CyberDemon)
+        self.restricted_area = {(i, j) for i in range(10) for j in range(10)}  # Areas where NPCs cannot spawn
+        
+        self.spawn_npc()  # Spawn NPCs
 
-        # sprite map
+        # Add static and animated sprites to the game world
         add_sprite(AnimatedSprite(game))
         add_sprite(AnimatedSprite(game, pos=(1.5, 1.5)))
         add_sprite(AnimatedSprite(game, pos=(1.5, 7.5)))
@@ -58,27 +61,32 @@ class ObjectHandler:
 
     def spawn_npc(self):
         for i in range(self.enemies):
-                npc = choices(self.npc_types, self.weights)[0]
+            npc = choices(self.npc_types, self.weights)[0]  # Randomly select an NPC type based on the weights
+            pos = x, y = randrange(self.game.map.cols), randrange(self.game.map.rows)  # Generate random coordinates
+            # Ensure the position is not in the world map or restricted area
+            while (pos in self.game.map.world_map) or (pos in self.restricted_area):
                 pos = x, y = randrange(self.game.map.cols), randrange(self.game.map.rows)
-                while (pos in self.game.map.world_map) or (pos in self.restricted_area):
-                    pos = x, y = randrange(self.game.map.cols), randrange(self.game.map.rows)
-                self.add_npc(npc(self.game, pos=(x + 0.5, y + 0.5)))
+            self.add_npc(npc(self.game, pos=(x + 0.5, y + 0.5)))  # Add the NPC to the game world
+
 
     def check_win(self):
-        if not len(self.npc_positions):
-            self.game.object_renderer.win()
-            pg.display.flip()
-            pg.time.delay(1500)
-            self.game.new_game()
+        if not len(self.npc_positions):  # If there are no NPCs left
+            self.game.object_renderer.win()  # Show the win screen
+            pg.display.flip()  # Refresh the display
+            pg.time.delay(1500)  # Wait 1.5 seconds before starting a new game
+            self.game.new_game()  # Start a new game
+
 
     def update(self):
-        self.npc_positions = {npc.map_pos for npc in self.npc_list if npc.alive}
-        [sprite.update() for sprite in self.sprite_list]
-        [npc.update() for npc in self.npc_list]
-        self.check_win()
+        self.npc_positions = {npc.map_pos for npc in self.npc_list if npc.alive}  # Update NPC positions
+        [sprite.update() for sprite in self.sprite_list]  # Update all sprites
+        [npc.update() for npc in self.npc_list]  # Update all NPCs
+        self.check_win()  # Check if the player has won
+
 
     def add_npc(self, npc):
-        self.npc_list.append(npc)
+        self.npc_list.append(npc)  # Add an NPC to the list
+
 
     def add_sprite(self, sprite):
-        self.sprite_list.append(sprite)
+        self.sprite_list.append(sprite) # Add a sprite to the list

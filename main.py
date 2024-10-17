@@ -57,11 +57,15 @@ class Game:
     # Handle all game events (input, quit, etc.)
     def check_events(self):
         self.global_trigger = False  # Reset global trigger before checking events
-        for event in pg.event.get():  # Loop through all events
+        
+        # Loop through all events
+        for event in pg.event.get():
+
+            # Quit the game if the user closes the window or presses ESC
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
-                # Quit the game if the user closes the window or presses ESC
                 pg.quit()
                 sys.exit(0)
+
             elif event.type == self.global_event:
                 # Trigger custom global event (used for timed updates)
                 self.global_trigger = True
