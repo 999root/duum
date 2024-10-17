@@ -1,8 +1,8 @@
-
 import pygame as pg
 from settings import *
 import os
 from collections import deque
+
 
 class SpriteObject:
     def __init__(self, game, path='resources/sprites/static_sprites/candlebra.png',
@@ -21,12 +21,12 @@ class SpriteObject:
 
     def get_sprite_projection(self):
         proj = SCREEN_DIST / self.norm_dist * self.SPRITE_SCALE
-        proj_width, proj_height = proj* self.IMAGE_RATIO, proj
+        proj_width, proj_height = proj * self.IMAGE_RATIO, proj
 
         image = pg.transform.scale(self.image, (proj_width, proj_height))
 
         self.sprite_half_width = proj_width // 2
-        height_shift = proj_height * self.SPRITE_HEIGHT_SHIT
+        height_shift = proj_height * self.SPRITE_HEIGHT_SHIFT
         pos = self.screen_x - self.sprite_half_width, HALF_HEIGHT - proj_height // 2 + height_shift
 
         self.game.raycasting.objects_to_render.append((self.norm_dist, image, pos))
@@ -45,12 +45,13 @@ class SpriteObject:
         self.screen_x = (HALF_NUM_RAYS + delta_rays) * SCALE
 
         self.dist = math.hypot(dx, dy)
-        self.norm_dist * math.cos(delta)
+        self.norm_dist = self.dist * math.cos(delta)
         if -self.IMAGE_HALF_WIDTH < self.screen_x < (WIDTH + self.IMAGE_HALF_WIDTH) and self.norm_dist > 0.5:
             self.get_sprite_projection()
 
     def update(self):
         self.get_sprite()
+
 
 class AnimatedSprite(SpriteObject):
     def __init__(self, game, path='resources/sprites/animated_sprites/green_light/0.png',
@@ -58,12 +59,13 @@ class AnimatedSprite(SpriteObject):
         super().__init__(game, path, pos, scale, shift)
         self.animation_time = animation_time
         self.path = path.rsplit('/', 1)[0]
+        self.images = self.get_images(self.path)
         self.animation_time_prev = pg.time.get_ticks()
         self.animation_trigger = False
 
     def update(self):
         super().update()
-        self.check_aniamtion_time()
+        self.check_animation_time()
         self.animate(self.images)
 
     def animate(self, images):

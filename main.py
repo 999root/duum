@@ -1,16 +1,11 @@
-
-# Pygame Library
 import pygame as pg
-
-# System Library for quiting and exiting
 import sys
-
-# Game Instances Imports
 from settings import *
 from map import *
 from player import *
-from object_renderer import *
 from raycasting import *
+from object_renderer import *
+from sprite_object import *
 from object_handler import *
 from weapon import *
 from sound import *
@@ -27,7 +22,7 @@ class Game:
         self.global_trigger = False
         self.global_event = pg.USEREVENT + 0
         pg.time.set_timer(self.global_event, 40)
-        self.new_game() # Create a new game upon the instance's initialisation
+        self.new_game()
 
     def new_game(self):
         self.map = Map(self) # Initialise the Map
@@ -47,10 +42,10 @@ class Game:
         self.weapon.update()
         pg.display.flip()
         self.delta_time = self.clock.tick(FPS)
-        pg.display.set_caption(f'{self.clock.get_fps() :1.f}')
+        pg.display.set_caption(f'{self.clock.get_fps() :.1f}')
 
     def draw(self):
-        self.object_renderer.draw()
+        self.object_render.draw()
         self.weapon.draw()
 
     def check_events(self):

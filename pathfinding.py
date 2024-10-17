@@ -1,6 +1,6 @@
-
 from collections import deque
 from functools import lru_cache
+
 
 class PathFinding:
     def __init__(self, game):

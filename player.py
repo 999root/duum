@@ -30,7 +30,7 @@ class Player():
         
     def check_game_over(self):
         if self.health < 1: # If player is the below
-            self.game.object_renderer.game_over() # render the game over screen
+            self.game.object_render.game_over() # render the game over screen
             pg.display.flip()
             pg.time.delay(1500) # ms
             self.game.new_game() # load a new game
@@ -81,7 +81,7 @@ class Player():
             dx *= self.diag_move_corr
             dy *= self.diag_move_corr
 
-        self.check_wall_collisions(dx, dy) # Make sure the player can't walk through walls
+        self.check_wall_collision(dx, dy) # Make sure the player can't walk through walls
 
         self.angle %= math.tau # tau = 2*pi
 

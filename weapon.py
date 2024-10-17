@@ -8,7 +8,7 @@ class Weapon(AnimatedSprite):
              for img in self.images])
         self.weapon_pos = (HALF_WIDTH - self.image.get_width() // 2, HEIGHT - self.images[0].get_height())
         self.reloading = False
-        self.num_i9mages = len(self.images)
+        self.num_images = len(self.images)
         self.frame_counter = 0
         self.damage = 50
 

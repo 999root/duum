@@ -1,11 +1,6 @@
-
-# Pygame Init
 import pygame as pg
 
-# Declare a _ as False and an empty space
 _ = False
-
-# Make the mini map
 mini_map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, _, _, _, _, _, _, _, _, _, _, _, _, _, _, 1],
@@ -41,9 +36,10 @@ mini_map = [
     [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
 ]
 
+
 class Map:
     def __init__(self, game):
-        self.game = game # get the game's instance
+        self.game = game
         self.mini_map = mini_map
         self.world_map = {}
         self.rows = len(self.mini_map)
